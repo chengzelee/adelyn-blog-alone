@@ -7,9 +7,12 @@ import cn.adelyn.blog.manager.dao.service.*;
 import cn.adelyn.blog.manager.event.listener.bo.EventDeleteBlogBO;
 import cn.adelyn.blog.manager.event.listener.bo.EventInsertBlogBO;
 import cn.adelyn.blog.manager.event.listener.bo.EventUpdateBlogBO;
-import cn.adelyn.blog.manager.pojo.bo.*;
+import cn.adelyn.blog.manager.pojo.bo.GetBlogPageBO;
+import cn.adelyn.blog.manager.pojo.bo.InsertBlogBO;
+import cn.adelyn.blog.manager.pojo.bo.UpdateBlogBO;
 import cn.adelyn.blog.manager.pojo.dto.GetBlogPageDTO;
 import cn.adelyn.blog.manager.pojo.vo.BlogVO;
+import cn.adelyn.blog.resource.service.ResourceService;
 import cn.adelyn.framework.core.cglib.BeanCopierUtil;
 import cn.adelyn.framework.core.pojo.vo.PageVO;
 import cn.adelyn.framework.core.util.ConcurrentUtil;
@@ -38,6 +41,7 @@ public class BlogService {
     private final BlogTagMappingDAOService blogTagMappingDAOService;
     private final BlogPicMappingDAOService blogPicMappingDAOService;
     private final TagInfoDAOService tagInfoDAOService;
+    private final ResourceService resourceService;
 
     public Long insertBlog(InsertBlogBO insertBlogBO) {
         Long blogId = snowflakeService.nextId();
@@ -80,6 +84,8 @@ public class BlogService {
             blogInfoDAOService.deleteBlogInfoByBlogId(blogId);
             blogContentDAOService.deleteBlogContent(blogId);
             blogTagMappingDAOService.deleteBlogTagMappingByBlogId(blogId);
+            List<Long> blogPicIdList = blogPicMappingDAOService.selectPicIdListByBlogId(blogId);
+            resourceService.deleteResource(blogPicIdList);
             blogPicMappingDAOService.deleteBlogPicMappingByBlogId(blogId);
         });
 

@@ -19,7 +19,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
-import java.util.List;
 
 @Validated
 @RestController

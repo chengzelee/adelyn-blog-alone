@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -31,6 +32,14 @@ public class ResourceService {
 
         ossService.putObject(absolutePath , inputStream);
         return resourceId;
+    }
+
+    public void deleteResource(List<Long> resourceIdList) {
+        resourceIdList.forEach(resourceId -> {
+            ossService.deleteObject(resourceId + ".png");
+        });
+
+        resourceInfoDAOService.deleteResourceByResourceId(resourceIdList);
     }
 
     public String getPicUrl(Long picId) {

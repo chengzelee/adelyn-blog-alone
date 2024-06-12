@@ -10,6 +10,8 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 @Repository
 @AllArgsConstructor
 public class ResourceInfoDAOServiceImpl extends ServiceImpl<ResourceInfoMapper, ResourceInfoPO> implements ResourceInfoDAOService {
@@ -24,5 +26,10 @@ public class ResourceInfoDAOServiceImpl extends ServiceImpl<ResourceInfoMapper, 
         ResourceInfoPO resourceInfoPO = BeanCopierUtil.copy(addResourceInfoBO, ResourceInfoPO.class);
 
         save(resourceInfoPO);
+    }
+
+    @Override
+    public void deleteResourceByResourceId(List<Long> resourceIdList) {
+        removeBatchByIds(resourceIdList);
     }
 }

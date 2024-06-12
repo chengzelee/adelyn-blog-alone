@@ -1,16 +1,15 @@
 package cn.adelyn.blog.search.service;
 
+import cn.adelyn.blog.manager.pojo.bo.InsertBlogBO;
+import cn.adelyn.blog.search.constant.EsBlogConstant;
 import cn.adelyn.blog.search.pojo.bo.SearchBO;
 import cn.adelyn.blog.search.pojo.dto.SearchBlogDTO;
 import cn.adelyn.blog.search.pojo.vo.SearchBlogVO;
 import cn.adelyn.framework.core.execption.AdelynException;
 import cn.adelyn.framework.core.pojo.vo.PageVO;
 import cn.adelyn.framework.core.response.ResponseEnum;
-import cn.adelyn.blog.manager.pojo.bo.InsertBlogBO;
-import cn.adelyn.blog.search.constant.EsBlogConstant;
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch._types.Result;
-import co.elastic.clients.elasticsearch._types.SortOrder;
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import co.elastic.clients.elasticsearch.core.*;
 import co.elastic.clients.elasticsearch.core.search.HighlightField;

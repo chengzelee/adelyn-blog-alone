@@ -14,15 +14,15 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class OssConfig {
 
-    @Value("${oss.endpoint:https://oss-cn-hangzhou.aliyuncs.com}")
+    @Value("${adelyn.blog.oss.endpoint:https://oss-cn-shanghai.aliyuncs.com}")
     private String endpoint;
-    @Value("${oss.accessKeyId:ak}")
+    @Value("${adelyn.blog.oss.accessKeyId:ak}")
     private String accessKeyId;
-    @Value("${oss.accessKeySecret:sk}")
+    @Value("${adelyn.blog.oss.accessKeySecret:sk}")
     private String accessKeySecret;
 
     @Getter
-    @Value("${oss.adelyn.domain:https://oss.adelyn.cn}")
+    @Value("${adelyn.blog.oss.domain:https://oss.adelyn.cn}")
     private String adelynOssDomain;
 
     public String getBucketName() {

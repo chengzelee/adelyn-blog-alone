@@ -10,4 +10,6 @@ public interface BlogPicMappingDAOService extends IService<BlogPicMappingPO> {
     void insertBlogPicMapping(Long blogId, List<Long> picIdList);
 
     void deleteBlogPicMappingByBlogId(Long blogId);
+
+    List<Long> selectPicIdListByBlogId(Long blogId);
 }

@@ -6,7 +6,6 @@ import cn.adelyn.framework.core.execption.AdelynException;
 import cn.adelyn.framework.core.pojo.bo.UserInfoBO;
 import cn.adelyn.framework.core.response.ResponseEnum;
 import cn.adelyn.framework.core.response.ServerResponse;
-import cn.adelyn.framework.core.util.CollectionUtil;
 import cn.adelyn.framework.core.util.StringUtil;
 import com.alibaba.fastjson2.JSON;
 import jakarta.servlet.*;
@@ -25,7 +24,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.Objects;
 
 /**

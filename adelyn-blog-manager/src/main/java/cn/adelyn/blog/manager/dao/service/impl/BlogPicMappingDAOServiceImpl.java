@@ -34,4 +34,12 @@ public class BlogPicMappingDAOServiceImpl extends ServiceImpl<BlogPicMappingMapp
 
         baseMapper.delete(wrapper);
     }
+
+    @Override
+    public List<Long> selectPicIdListByBlogId(Long blogId) {
+        LambdaQueryWrapper<BlogPicMappingPO> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(BlogPicMappingPO::getBlogId, blogId);
+
+        return list(wrapper).stream().map(BlogPicMappingPO::getPicId).toList();
+    }
 }
