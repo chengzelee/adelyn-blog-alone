@@ -1,0 +1,38 @@
+logging:
+  level:
+    root: info
+  file:
+    path: "D:\\logs"
+
+server:
+  port: 9099
+  servlet:
+    context-path: /blog
+
+adelyn:
+  auth:
+    unauth:
+      uriPatterns: /**/public/**
+  elasticsearch:
+    host: elasticsearch
+    port: 9200
+
+spring:
+  application:
+    name: adelyn-blog
+  #启动虚拟线程的必须配置
+  threads:
+    virtual:
+      # 启用虚拟线程技术，增加系统并发能力
+      enabled: true
+  servlet:
+    multipart:
+      max-file-size: 1000MB        # 设置单个文件最大大小为1000MB
+      max-request-size: 10000MB    # 设置多个文件大小为10000MB
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://mysql:3080/t1?characterEncoding=utf8&rewriteBatchedStatements=true
+    username: root
+    password: 123456
+
+

@@ -1,0 +1,17 @@
+version: '3.8'
+services:
+  elasticsearch:
+    image: elasticsearch:8.3.3
+    container_name: elasticsearch
+    privileged: true
+    environment:
+      - "cluster.name=elasticsearch"
+      - "discovery.type=single-node"
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+      - "xpack.security.enabled=false"
+    volumes:
+      - /docker/apps/base/elasticsearch/plugins:/usr/share/elasticsearch/plugins
+      - /docker/apps/base/elasticsearch/data:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
+    restart: always

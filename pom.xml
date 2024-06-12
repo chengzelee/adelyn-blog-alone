@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>cn.adelyn.blog</groupId>
+    <artifactId>adelyn-blog-parent</artifactId>
+    <version>${revision}</version>
+    <packaging>pom</packaging>
+
+    <name>adelyn-blog</name>
+
+    <modules>
+        <module>adelyn-blog-bom</module>
+        <module>adelyn-blog-manager</module>
+    </modules>
+
+    <properties>
+        <java.version>21</java.version>
+        <project.encoding>UTF-8</project.encoding>
+        <spring-boot-maven-plugin.version>3.1.5</spring-boot-maven-plugin.version>
+        <maven-flatten.version>1.5.0</maven-flatten.version>
+
+        <revision>1.0.0-SNAPSHOT</revision>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>cn.adelyn.blog</groupId>
+                <artifactId>adelyn-blog-bom</artifactId>
+                <version>${project.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                    <version>${spring-boot-maven-plugin.version}</version>
+                    <executions>
+                        <!-- 打jar包的时候把依赖包也打进去，一般有启动类的时候需要（可独立运行），如果没有他，只能作为依赖包用-->
+                        <!-- execution: 执行 -->
+                        <execution>
+                            <goals>
+                                <goal>repackage</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                    <configuration>
+                        <outputDirectory>${project.basedir}/docker</outputDirectory>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <version>${maven-flatten.version}</version>
+                <configuration>
+                    <updatePomFile>true</updatePomFile>
+                    <flattenMode>resolveCiFriendliesOnly</flattenMode>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>flatten</id>
+                        <goals>
+                            <goal>flatten</goal>
+                        </goals>
+                        <phase>process-resources</phase>
+                    </execution>
+                    <execution>
+                        <id>flatten.clean</id>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                        <phase>clean</phase>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+
+        <!-- 配置资源文件 -->
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <!-- filtering：决定是否将resources目录下的文件中的tokens（即通过@val@标识的变量）进行参数替换。
+                这里的参数主要有两个来源，一个是来自于pom文件中的properties属性，一个是来源于外部的.properties文件
+                https://www.jianshu.com/p/4410613bb36f
+                -->
+                <filtering>true</filtering>
+                <!-- 除配置文件外，需要打包的资源，maven默认不打包这些 -->
+                <includes>
+                    <include>**/*.*</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
+
+    <profiles>
+        <!--使用 mvn clean install -P<profile id> 进行激活prod环境的配置，否则激活默认环境-->
+        <!-- eg. mvn package -P dev -D skipTests-->
+        <profile>
+            <id>dev</id>
+            <properties>
+                <!-- 环境标识，需要与配置文件的名称相对应 -->
+                <profiles.active>dev</profiles.active>
+                <!-- 相同 namespace 不同 group 有服务隔离 https://github.com/alibaba/nacos/issues/3193-->
+                <nacos.namespace>8cdb7e4c-c7b0-4984-90b7-4011be7cb60f</nacos.namespace>
+                <nacos.group>ADELYN_DEV</nacos.group>
+                <nacos.server-addr>192.168.23.132:8848</nacos.server-addr>
+                <nacos.username>nacos</nacos.username>
+                <nacos.password>nacos</nacos.password>
+            </properties>
+        </profile>
+        <profile>
+            <id>prod</id>
+            <properties>
+                <profiles.active>prod</profiles.active>
+                <nacos.namespace>c6fe7b8b-0dbb-4c9e-a774-4dc5e5b7e467</nacos.namespace>
+                <nacos.group>ADELYN_PROD</nacos.group>
+                <nacos.server-addr>192.168.88.128:8848</nacos.server-addr>
+                <nacos.username>nacos</nacos.username>
+                <nacos.password>nacos</nacos.password>
+            </properties>
+        </profile>
+    </profiles>
+
+</project>
