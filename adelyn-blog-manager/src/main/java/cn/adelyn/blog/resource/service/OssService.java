@@ -144,7 +144,7 @@ public class OssService {
     public URL generateGetObjectUrl(String objectAbsolutePath, long validTime) {
         URL signedUrl = null;
         try {
-            // 指定生成的签名URL过期时间，单位为毫秒。本示例以设置过期时间为1小时为例。
+            // 指定生成的签名URL过期时间，单位为毫秒。
             Date expiration = new Date(new Date().getTime() + validTime);
 
             // 生成签名URL。

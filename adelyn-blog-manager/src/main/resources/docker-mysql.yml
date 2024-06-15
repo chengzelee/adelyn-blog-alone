@@ -1,1 +1,0 @@
-docker run --privileged=true -p 33060:3306 -m 1g --name mysql -e MYSQL_ROOT_PASSWORD=123456 -d mysql:8.0.30

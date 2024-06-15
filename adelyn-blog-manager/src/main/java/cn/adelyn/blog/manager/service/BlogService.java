@@ -41,7 +41,7 @@ public class BlogService {
     private final BlogTagMappingDAOService blogTagMappingDAOService;
     private final BlogPicMappingDAOService blogPicMappingDAOService;
     private final TagInfoDAOService tagInfoDAOService;
-    private final ResourceService resourceService;
+    private final BlogPicService blogPicService;
 
     public Long insertBlog(InsertBlogBO insertBlogBO) {
         Long blogId = snowflakeService.nextId();
@@ -68,11 +68,8 @@ public class BlogService {
             blogContentDAOService.updateBlogContent(blogId, updateBlogBO.getBlogContent());
             blogTagMappingDAOService.deleteBlogTagMappingByBlogId(blogId);
             blogTagMappingDAOService.insertBlogTagMapping(blogId, updateBlogBO.getTagIdList());
-        });
-
-        ConcurrentUtil.processTask(() -> {
-            blogPicMappingDAOService.deleteBlogPicMappingByBlogId(blogId);
             blogPicMappingDAOService.insertBlogPicMapping(blogId, updateBlogBO.getPicIdList());
+
         });
 
         EventUpdateBlogBO eventUpdateBlogBO = BeanCopierUtil.copy(updateBlogBO, EventUpdateBlogBO.class);
@@ -83,9 +80,9 @@ public class BlogService {
         ConcurrentUtil.processTask(() -> {
             blogInfoDAOService.deleteBlogInfoByBlogId(blogId);
             blogContentDAOService.deleteBlogContent(blogId);
+            List<Long> picIdList = blogPicMappingDAOService.selectPicIdListByBlogId(blogId);
+            blogPicService.deletePic(picIdList);
             blogTagMappingDAOService.deleteBlogTagMappingByBlogId(blogId);
-            List<Long> blogPicIdList = blogPicMappingDAOService.selectPicIdListByBlogId(blogId);
-            resourceService.deleteResource(blogPicIdList);
             blogPicMappingDAOService.deleteBlogPicMappingByBlogId(blogId);
         });
 

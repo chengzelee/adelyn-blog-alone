@@ -3,7 +3,13 @@ package cn.adelyn.blog.auth.controller;
 import cn.adelyn.blog.auth.pojo.dto.AuthenticationDTO;
 import cn.adelyn.blog.auth.pojo.vo.TokenInfoVO;
 import cn.adelyn.blog.auth.service.LoginService;
+import cn.adelyn.framework.core.execption.AdelynException;
+import cn.adelyn.framework.core.response.ResponseEnum;
 import cn.adelyn.framework.core.response.ServerResponse;
+import com.alibaba.csp.sentinel.Entry;
+import com.alibaba.csp.sentinel.SphU;
+import com.alibaba.csp.sentinel.slots.block.BlockException;
+import com.alibaba.csp.sentinel.slots.block.flow.FlowException;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,7 +31,11 @@ public class LoginController {
 
 	@PostMapping("/public/login")
 	public ServerResponse<TokenInfoVO> login(@Valid @RequestBody AuthenticationDTO authenticationDTO) {
-		return ServerResponse.success(loginService.login(authenticationDTO));
+		try(Entry entry = SphU.entry("login")) {
+			return ServerResponse.success(loginService.login(authenticationDTO));
+		} catch (BlockException e) {
+			throw new AdelynException(ResponseEnum.TOO_MANY_REQUEST);
+		}
 	}
 
 }

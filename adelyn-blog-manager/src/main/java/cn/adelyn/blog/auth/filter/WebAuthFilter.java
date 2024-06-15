@@ -14,6 +14,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
@@ -115,7 +116,7 @@ public class WebAuthFilter implements Filter {
 			printWriter = response.getWriter();
 			printWriter.write(JSON.toJSONString(serverResponse));
 		} catch (IOException e) {
-			throw new AdelynException(ResponseEnum.PRINT_MSG_TO_RESPONSE_FAIL, e);
+			throw new AdelynException(ResponseEnum.FAIL, e);
 		}
 	}
 

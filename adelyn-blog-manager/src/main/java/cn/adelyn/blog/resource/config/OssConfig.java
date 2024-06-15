@@ -16,17 +16,20 @@ public class OssConfig {
 
     @Value("${adelyn.blog.oss.endpoint:https://oss-cn-shanghai.aliyuncs.com}")
     private String endpoint;
+    @Value("${adelyn.blog.oss.bucketName:adelyn-blog-test}")
+    private String ossBucketName;
     @Value("${adelyn.blog.oss.accessKeyId:ak}")
     private String accessKeyId;
     @Value("${adelyn.blog.oss.accessKeySecret:sk}")
     private String accessKeySecret;
 
     @Getter
-    @Value("${adelyn.blog.oss.domain:https://oss.adelyn.cn}")
+    @Value("${adelyn.blog.oss.domain:https://oss-test.adelyn.cn}")
     private String adelynOssDomain;
 
+
     public String getBucketName() {
-        return "adelyn-blog";
+        return ossBucketName;
     }
 
     // todo 用的时候再写
