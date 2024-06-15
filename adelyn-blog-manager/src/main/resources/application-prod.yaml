@@ -2,7 +2,7 @@ logging:
   level:
     root: info
   file:
-    path: "D:\\logs"
+    path: "/docker/adelyn/blog/logs"
 
 server:
   port: 9099
@@ -10,12 +10,18 @@ server:
     context-path: /blog
 
 adelyn:
+  blog:
+    oss:
+      domain: ${ADELYN_BLOG_OSS_DOMAIN}
+      bucketName: ${ADELYN_BLOG_OSS_BUCKET_NAME}
+      accessKeyId: ${ADELYN_BLOG_OSS_ACCESS_KEY_ID}
+      accessKeySecret: ${ADELYN_BLOG_OSS_ACCESS_KEY_SECRET}
   auth:
     unauth:
       uriPatterns: /**/public/**
   elasticsearch:
-    host: elasticsearch
-    port: 9200
+    host: ${ADELYN_ELASTICSEARCH_HOST}
+    port: ${ADELYN_ELASTICSEARCH_PORT}
 
 spring:
   application:
@@ -31,8 +37,8 @@ spring:
       max-request-size: 10000MB    # 设置多个文件大小为10000MB
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://mysql:3080/t1?characterEncoding=utf8&rewriteBatchedStatements=true
+    url: ${SPRING_DATASOURCE_URL}
     username: root
-    password: 123456
+    password: ${SPRING_DATASOURCE_PASSWORD}
 
 
