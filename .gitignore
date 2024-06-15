@@ -3,8 +3,10 @@ target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
-**/docker/*.jar
+**/docker/
 **/.flattened-pom.xml
+
+**/src/main/resources/application-dev.yaml
 
 ### STS ###
 .apt_generated
