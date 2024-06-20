@@ -41,7 +41,7 @@ public class AuthAccountService {
 			throw new AdelynException("userInfo inValid");
 		}
 
-		if (!Objects.equals(authAccountPO.getStatus(), AuthAccountStatus.enable)) {
+		if (!Objects.equals(authAccountPO.getStatus(), AuthAccountStatus.ENABLE)) {
 			throw new AdelynException("userInfo inValid");
 		}
 
@@ -61,7 +61,7 @@ public class AuthAccountService {
 		authAccountPO.setUserName(name);
 		authAccountPO.setPassword(password);
 		authAccountPO.setUserId(snowflakeRpcService.nextId());
-		authAccountPO.setStatus(AuthAccountStatus.enable);
+		authAccountPO.setStatus(AuthAccountStatus.ENABLE);
 
 		authAccountDaoService.insetAccount(authAccountPO);
 

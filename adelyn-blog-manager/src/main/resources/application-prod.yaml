@@ -5,9 +5,13 @@ logging:
     path: "/docker/adelyn/blog/logs"
 
 server:
-  port: 9099
+  port: ${SERVER_PORT}
   servlet:
-    context-path: /blog
+    context-path: ${SERVER_SERVLET_CONTEXT_PATH}
+  ssl:
+    key-store: ${SERVER_SSL_KEY_STORE}
+    key-store-password: ${SERVER_SSL_KEY_STORE_PASSWORD}
+    key-store-type: PKCS12
 
 adelyn:
   blog:
@@ -17,6 +21,9 @@ adelyn:
       accessKeyId: ${ADELYN_BLOG_OSS_ACCESS_KEY_ID}
       accessKeySecret: ${ADELYN_BLOG_OSS_ACCESS_KEY_SECRET}
   auth:
+    token:
+      privateKey: ${ADELYN_AUTH_TOKEN_PRIVATE_KEY}
+      publicKey: ${ADELYN_AUTH_TOKEN_PUBLIC_KEY}
     unauth:
       uriPatterns: /**/public/**
   elasticsearch:

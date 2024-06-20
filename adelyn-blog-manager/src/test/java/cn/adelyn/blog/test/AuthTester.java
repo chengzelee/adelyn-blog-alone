@@ -1,10 +1,13 @@
 package cn.adelyn.blog.test;
 
+import cn.adelyn.blog.auth.constant.AuthAccountStatus;
+import cn.adelyn.blog.auth.dao.po.AuthAccountPO;
 import cn.adelyn.blog.auth.pojo.dto.AuthenticationDTO;
 import cn.adelyn.blog.auth.pojo.dto.RegisterAccountDTO;
 import cn.adelyn.blog.auth.pojo.vo.TokenInfoVO;
 import cn.adelyn.blog.auth.service.AuthAccountService;
 import cn.adelyn.blog.auth.service.LoginService;
+import cn.adelyn.blog.manager.service.SnowflakeService;
 import cn.adelyn.framework.crypto.constant.AlgoConstant;
 import cn.adelyn.framework.crypto.utils.JwtUtil;
 import cn.adelyn.framework.crypto.utils.KeyUtil;
@@ -12,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.security.*;
 import java.security.spec.InvalidKeySpecException;
@@ -24,6 +28,10 @@ public class AuthTester {
 
     @Autowired
     private AuthAccountService authAccountService;
+    @Autowired
+    private SnowflakeService snowflakeRpcService;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
     @Autowired
     private LoginService loginService;
@@ -38,6 +46,13 @@ public class AuthTester {
         registerAccountDTO.setPassword(PASSWORD);
 
         authAccountService.registerAccount(registerAccountDTO);
+    }
+
+    @Test
+    void encodePassword() {
+        String password = passwordEncoder.encode("123456");
+        Long id = snowflakeRpcService.nextId();
+        log.info("id: {}, password: {}", id, password);
     }
 
     @Test
