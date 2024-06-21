@@ -21,6 +21,7 @@ public class BlogEventListener {
 
     @EventListener
     public void listenInsertBlog(EventInsertBlogBO eventInsertBlogBO) {
+        log.info("listen insert blog: {}", eventInsertBlogBO.getBlogTitle());
         ConcurrentUtil.processTask(() -> {
             InsertBlogBO insertBlogBO = BeanCopierUtil.copy(eventInsertBlogBO, InsertBlogBO.class);
             blogSearchService.insertBlog(insertBlogBO);

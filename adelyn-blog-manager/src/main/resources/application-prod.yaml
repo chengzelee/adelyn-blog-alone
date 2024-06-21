@@ -13,8 +13,15 @@ server:
     key-store-password: ${SERVER_SSL_KEY_STORE_PASSWORD}
     key-store-type: PKCS12
 
+
 adelyn:
   blog:
+    auth:
+      aliPay:
+        gateWay: ${ADELYN_AUTH_ALIPAY_GATEWAY}
+        appId: ${ADELYN_AUTH_ALIPAY_APPID}
+        privateKey: ${ADELYN_AUTH_ALIPAY_PRIVATE_KEY}
+        publicKey: ${ADELYN_AUTH_ALIPAY_PUBLIC_KEY}
     oss:
       domain: ${ADELYN_BLOG_OSS_DOMAIN}
       bucketName: ${ADELYN_BLOG_OSS_BUCKET_NAME}

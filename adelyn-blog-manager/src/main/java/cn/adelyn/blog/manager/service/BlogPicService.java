@@ -3,6 +3,7 @@ package cn.adelyn.blog.manager.service;
 import cn.adelyn.blog.manager.dao.service.BlogPicInfoDAOService;
 import cn.adelyn.blog.resource.service.ResourceService;
 import cn.adelyn.framework.cache.util.CaffeineCacheUtil;
+import cn.adelyn.framework.core.util.StringUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +22,11 @@ public class BlogPicService {
 
     public Long addPic(String picName, InputStream inputStream) {
         Long picId = snowflakeService.nextId();
+        // 没有格式的默认给png
+        if (!StringUtil.hasLength(picName) || !picName.contains(".")) {
+            picName = picName + ".png";
+        }
+
         Long resourceId = resourceService.addResource(picName, inputStream);
 
         blogPicInfoDAOService.insertBlogPicInfo(picId, resourceId);

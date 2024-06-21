@@ -8,6 +8,7 @@ import cn.adelyn.blog.manager.event.listener.bo.EventInsertBlogBO;
 import cn.adelyn.blog.search.service.EsRefreshService;
 import cn.adelyn.framework.core.cglib.BeanCopierUtil;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class BlogRefreshEsService {
@@ -26,11 +28,13 @@ public class BlogRefreshEsService {
 
     public void refreshEs() {
         esRefreshService.recreateIndex();
+        log.info("recreat index success");
 
         List<BlogInfoPO> blogInfoPOLIst = blogInfoDAOService.list();
         Map<Long, String> blogIdToContentMap = blogContentDAOService.list()
             .stream()
             .collect(Collectors.toMap(BlogContentPO::getBlogId, BlogContentPO::getBlogContent));
+        log.info("start sync to es, total: {}", blogInfoPOLIst.size());
 
         blogInfoPOLIst.forEach(blogInfoPO -> {
             EventInsertBlogBO eventInsertBlogBO = BeanCopierUtil.copy(blogInfoPO, EventInsertBlogBO.class);
