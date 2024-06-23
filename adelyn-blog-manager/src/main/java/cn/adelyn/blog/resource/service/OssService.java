@@ -141,11 +141,11 @@ public class OssService {
      * 自定义域名转发，避免强制下载
      * https://help.aliyun.com/zh/oss/support/0048-00000113?spm=a2c4g.11186623.0.i13#main-2292898
      */
-    public URL generateGetObjectUrl(String objectAbsolutePath, long validTime) {
+    public URL generateGetObjectUrl(String objectAbsolutePath, long validMillSec) {
         URL signedUrl = null;
         try {
             // 指定生成的签名URL过期时间，单位为毫秒。
-            Date expiration = new Date(new Date().getTime() + validTime);
+            Date expiration = new Date(new Date().getTime() + validMillSec);
 
             // 生成签名URL。
             GeneratePresignedUrlRequest request = new GeneratePresignedUrlRequest(ossConfig.getBucketName(), objectAbsolutePath, HttpMethod.GET);

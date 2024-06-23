@@ -37,8 +37,8 @@ public class BlogPicService {
         Long resourceId = getResourceIdByPicId(picId);
 
         return (String) CaffeineCacheUtil.get("downloadUrl:" + picId,
-                // 搞一个15秒有效的链接，之的后走cdn
-                (key) -> resourceService.generateDownloadUrl(resourceId, 15000L),
+                // 搞一个短期有效的链接，之的后走cdn
+                (key) -> resourceService.generateDownloadUrl(resourceId, 1729000000L),
                 20, TimeUnit.DAYS);
     }
 

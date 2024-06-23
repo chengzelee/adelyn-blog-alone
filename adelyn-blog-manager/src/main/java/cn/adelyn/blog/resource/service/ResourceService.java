@@ -35,10 +35,10 @@ public class ResourceService {
         return resourceId;
     }
 
-    public String generateDownloadUrl(Long resourceId, Long validTime) {
+    public String generateDownloadUrl(Long resourceId, Long validMillSec) {
         String absolutePath = getAbsolutePathByResourceId(resourceId);
 
-        return ossService.generateGetObjectUrl(absolutePath, validTime).toString();
+        return ossService.generateGetObjectUrl(absolutePath, validMillSec).toString();
     }
 
     public void deleteResource(List<Long> resourceIdList) {
