@@ -30,10 +30,10 @@ public class TokenService {
     @Value("${adelyn.auth.token.publicKey:MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnoQQ+Ja8qJEnaJJPV5F5Xa6NoY2ykiWV9Q3WTUINIWgF3+kTcTO4P+MO+kjfvW7jDsLEFPwDz+rJ3URhVTnU3dddVxQDa0MuPsxNVaWBELUnWGwYqhdhlobltdb/optxQUbBKtsQzuDW8jD6iS/Doowc9Fk9yo4M+uVyIiiGuwqOd9jToABid5jwI9PzakLPQf4KO67trJZkEDpki9XGSQ1zbiS6ZlYmWf5k1AbJTHWGYyUi4aQK0bzHuP1Q74Z4gdxIg2l/IE2kdFZ0H2YNGobSJelUQsVcIpek1wXQBVRozIULMBcMUwEJy4oUhDYxexH0s75KwLuicVCj4K6pUwIDAQAB}")
     private String base64PublicKey;
 
-    @Value("${adelyn.auth.token.access.expirationTime:60000}")
+    @Value("${adelyn.auth.token.access.expirationTime:1200000}")
     private long accessTokenExpirationTime;
 
-    @Value("${adelyn.auth.token.refresh.expirationTime:120000}")
+    @Value("${adelyn.auth.token.refresh.expirationTime:2400000}")
     private long refreshTokenExpirationTime;
 
     private final Map<String, PrivateKey> keyMap = new ConcurrentHashMap<>();
