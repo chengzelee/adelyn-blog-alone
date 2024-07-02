@@ -14,12 +14,15 @@ import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import co.elastic.clients.elasticsearch.core.*;
 import co.elastic.clients.elasticsearch.core.search.HighlightField;
 import co.elastic.clients.elasticsearch.core.search.Hit;
+import com.alibaba.fastjson2.JSON;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.*;
 
+@Slf4j
 @Service
 @AllArgsConstructor
 public class BlogSearchService {
@@ -136,6 +139,12 @@ public class BlogSearchService {
                 // https://www.elastic.co/guide/en/elasticsearch/reference/8.3/highlighting.html
                 .highlight(h -> h
                         .fields(genHighlightFieldMap())
+                )
+                // 只返回指定字段
+                .source(src -> src
+                        .filter(f -> f
+                                .includes(EsBlogConstant.TITLE_FIELD, EsBlogConstant.USER_ID_FIELD, EsBlogConstant.VISIBLE_FIELD)
+                        )
                 )
 /*                .sort(sort -> sort
                         .field(f -> f
@@ -256,7 +265,6 @@ public class BlogSearchService {
             searchBlogVO.setBlogId(hit.id());
             searchBlogVO.setUserId(linkedHashMap.get(EsBlogConstant.USER_ID_FIELD).toString());
             searchBlogVO.setBlogTitle((String) linkedHashMap.get(EsBlogConstant.TITLE_FIELD));
-            searchBlogVO.setBlogContent((String) linkedHashMap.get(EsBlogConstant.CONTENT_FIELD));
             searchBlogVO.setVisible((String) linkedHashMap.get(EsBlogConstant.VISIBLE_FIELD));
 
             List<String> titleList = hit.highlight().get(EsBlogConstant.TITLE_FIELD);
@@ -274,10 +282,6 @@ public class BlogSearchService {
             }
 
             list.add(searchBlogVO);
-            // id 已在 es _id 中存储,不在source里重复存储，故无法通过es查询做排序
-            // 另一个好处是减少了 es 的计算量
-            list.sort(Comparator.comparingLong(a -> Long.parseLong(a.getBlogId()))
-            );
         });
 
         return list;
