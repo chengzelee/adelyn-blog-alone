@@ -25,22 +25,27 @@ public class BlogEventListener {
         ConcurrentUtil.processTask(() -> {
             InsertBlogBO insertBlogBO = BeanCopierUtil.copy(eventInsertBlogBO, InsertBlogBO.class);
             blogSearchService.insertBlog(insertBlogBO);
+            log.info("insert blog to es success, blogId: {}", insertBlogBO.getBlogId());
         });
     }
 
     @EventListener
     public void listenUpdateBlog(EventUpdateBlogBO eventUpdateBlogBO) {
+        log.info("listen update blog: {}", eventUpdateBlogBO.getBlogTitle());
         ConcurrentUtil.processTask(() -> {
             InsertBlogBO insertBlogBO = BeanCopierUtil.copy(eventUpdateBlogBO, InsertBlogBO.class);
             blogSearchService.updateBlog(insertBlogBO);
+            log.info("update blog to es success, blogId: {}", insertBlogBO.getBlogId());
         });
     }
 
     @EventListener
-    public void listendeleteBlog(EventDeleteBlogBO eventDeleteBlogBO) {
+    public void listenDeleteBlog(EventDeleteBlogBO eventDeleteBlogBO) {
+        log.info("listen delete blog: {}", eventDeleteBlogBO.getBlogId());
         ConcurrentUtil.processTask(() -> {
             Long blogId = eventDeleteBlogBO.getBlogId();
             blogSearchService.deleteBlog(blogId);
+            log.info("delete blog blog es success, blogId: {}", blogId);
         });
     }
 }

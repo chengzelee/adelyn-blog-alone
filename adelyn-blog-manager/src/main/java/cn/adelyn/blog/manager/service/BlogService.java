@@ -17,6 +17,7 @@ import cn.adelyn.framework.core.cglib.BeanCopierUtil;
 import cn.adelyn.framework.core.pojo.vo.PageVO;
 import cn.adelyn.framework.core.util.ConcurrentUtil;
 import cn.adelyn.framework.database.util.PageUtil;
+import com.alibaba.fastjson2.JSON;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -52,6 +53,7 @@ public class BlogService {
             blogContentDAOService.insertBlogContent(blogId, insertBlogBO.getBlogContent());
             blogTagMappingDAOService.insertBlogTagMapping(blogId, insertBlogBO.getTagIdList());
             blogPicMappingDAOService.insertBlogPicMapping(blogId, insertBlogBO.getPicIdList());
+            log.info("insert blog to db success, blogId:{}", blogId);
         });
 
         EventInsertBlogBO eventInsertBlogBO = BeanCopierUtil.copy(insertBlogBO, EventInsertBlogBO.class);
@@ -69,7 +71,7 @@ public class BlogService {
             blogTagMappingDAOService.deleteBlogTagMappingByBlogId(blogId);
             blogTagMappingDAOService.insertBlogTagMapping(blogId, updateBlogBO.getTagIdList());
             blogPicMappingDAOService.insertBlogPicMapping(blogId, updateBlogBO.getPicIdList());
-
+            log.info("update blog to db success, blogId: {}", blogId);
         });
 
         EventUpdateBlogBO eventUpdateBlogBO = BeanCopierUtil.copy(updateBlogBO, EventUpdateBlogBO.class);
@@ -84,6 +86,7 @@ public class BlogService {
             blogPicService.deletePic(picIdList);
             blogTagMappingDAOService.deleteBlogTagMappingByBlogId(blogId);
             blogPicMappingDAOService.deleteBlogPicMappingByBlogId(blogId);
+            log.info("delete blog from db success, blogId: {}", blogId);
         });
 
         EventDeleteBlogBO eventDeleteBlogBO = new EventDeleteBlogBO();
@@ -102,7 +105,7 @@ public class BlogService {
         return pageVO;
     }
 
-    public List< BlogVO> getBlogVOList(List<Long> blogIdList) {
+    public List<BlogVO> getBlogVOList(List<Long> blogIdList) {
         List<BlogInfoPO> blogInfoPOList = blogInfoDAOService.getBlogInfoListByBlogIdList(blogIdList);
 
         List<Long> allTagIdList = new ArrayList<>();

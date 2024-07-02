@@ -41,6 +41,15 @@ public class TagInfoDAOServiceImpl extends ServiceImpl<TagInfoMapper, TagInfoPO>
         updateById(tagInfoPO);
     }
 
+    public List<TagInfoPO> getAllTags(Long userId) {
+        LambdaQueryWrapper<TagInfoPO> queryWrapper = new LambdaQueryWrapper<>();
+        queryWrapper.select(TagInfoPO::getTagId, TagInfoPO::getTagName)
+                .orderByDesc(TagInfoPO::getTagId)
+                .eq(TagInfoPO::getUserId, userId);
+
+        return baseMapper.selectList(queryWrapper);
+    }
+
     @Override
     public Page<TagInfoPO> getTagPage(Long userId, PageDTO pageDTO) {
         LambdaQueryWrapper<TagInfoPO> queryWrapper = new LambdaQueryWrapper<>();

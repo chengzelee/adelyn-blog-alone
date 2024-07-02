@@ -51,6 +51,7 @@ public class BlogInfoDAOServiceImpl extends ServiceImpl<BlogInfoMapper, BlogInfo
 
         LambdaQueryWrapper<BlogInfoPO> wrapper = new LambdaQueryWrapper<>();
         wrapper.in(BlogInfoPO::getBlogId, blogIdList);
+        wrapper.orderByDesc(BlogInfoPO::getUpdateTime);
 
         return baseMapper.selectList(wrapper);
     }

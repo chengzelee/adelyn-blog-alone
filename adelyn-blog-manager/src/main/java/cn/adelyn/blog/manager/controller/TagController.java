@@ -40,10 +40,17 @@ public class TagController {
         return ServerResponse.success();
     }
 
-    @PostMapping("/page")
-    public ServerResponse<PageVO<TagVO>> getTagPage(@RequestBody @Valid GetTagPageDTO tagSearchDTO) {
+    @GetMapping("/getAllTags")
+    public ServerResponse<List<TagVO>> getAllTags() {
         return ServerResponse.success(
-                tagService.getTagPage(UserInfoContext.getUserId(), tagSearchDTO.getPageDTO())
+                tagService.getAllTags(UserInfoContext.getUserId())
+        );
+    }
+
+    @PostMapping("/pageWithBlogNum")
+    public ServerResponse<PageVO<TagVO>> getTagPageWithBlogNum(@RequestBody @Valid GetTagPageDTO tagSearchDTO) {
+        return ServerResponse.success(
+                tagService.getTagPageWithBlogNum(UserInfoContext.getUserId(), tagSearchDTO.getPageDTO())
         );
     }
 }

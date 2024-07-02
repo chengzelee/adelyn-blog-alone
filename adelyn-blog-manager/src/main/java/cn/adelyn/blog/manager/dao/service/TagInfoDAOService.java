@@ -15,6 +15,8 @@ public interface TagInfoDAOService extends IService<TagInfoPO> {
 
     void updateTag(Long tagId, String tagName);
 
+    List<TagInfoPO> getAllTags(Long userId);
+
     Page<TagInfoPO> getTagPage(Long userId, PageDTO pageDTO);
 
     List<TagInfoPO> getTagInfoListByTagList(List<Long> tagIdList);

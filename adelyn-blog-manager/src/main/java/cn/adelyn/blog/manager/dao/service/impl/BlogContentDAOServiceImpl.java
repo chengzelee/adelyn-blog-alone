@@ -4,8 +4,10 @@ import cn.adelyn.blog.manager.dao.mapper.BlogContentMapper;
 import cn.adelyn.blog.manager.dao.po.BlogContentPO;
 import cn.adelyn.blog.manager.dao.service.BlogContentDAOService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
+@Slf4j
 @Repository
 public class BlogContentDAOServiceImpl extends ServiceImpl<BlogContentMapper, BlogContentPO>  implements BlogContentDAOService {
 
@@ -24,7 +26,7 @@ public class BlogContentDAOServiceImpl extends ServiceImpl<BlogContentMapper, Bl
         blogContentPO.setBlogId(blogId);
         blogContentPO.setBlogContent(content);
 
-        updateById(blogContentPO);
+        saveOrUpdate(blogContentPO);
     }
 
     @Override
