@@ -2,7 +2,8 @@ package cn.adelyn.blog.auth.service;
 
 import cn.adelyn.blog.auth.constant.AuthAccountStatus;
 import cn.adelyn.blog.auth.dao.po.AuthAccountPO;
-import cn.adelyn.blog.auth.dao.service.AuthAccountDaoService;
+import cn.adelyn.blog.auth.dao.service.AuthAccountDAOService;
+import cn.adelyn.blog.auth.dao.service.impl.AuthAccountDaoServiceImpl;
 import cn.adelyn.blog.auth.pojo.dto.RegisterAccountDTO;
 import cn.adelyn.blog.manager.service.SnowflakeService;
 import cn.adelyn.framework.core.cglib.BeanCopierUtil;
@@ -24,11 +25,16 @@ import java.util.Objects;
 @AllArgsConstructor
 public class AuthAccountService {
 
-	private final AuthAccountDaoService authAccountDaoService;
+	private final AuthAccountDAOService authAccountDaoService;
 	private final SnowflakeService snowflakeRpcService;
 	private final PasswordEncoder passwordEncoder;
 
 	public static final String USER_NOT_FOUND_SECRET = "$2a$10$qgsD1Ez6oBYiE61dLAAkBO9dKzrv5oho3J9G0nR/eIDs75oY4hCvq";
+
+	public UserInfoBO getUserInfoByAliPauUserId(String aliPayUserId) {
+		AuthAccountPO authAccountPO = authAccountDaoService.getUserInfoByAliPauUserId(aliPayUserId);
+		return BeanCopierUtil.copy(authAccountPO, UserInfoBO.class);
+	}
 
 	public UserInfoBO verifyPassword(String userName, String password) {
 

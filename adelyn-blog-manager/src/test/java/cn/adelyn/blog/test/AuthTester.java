@@ -1,12 +1,11 @@
 package cn.adelyn.blog.test;
 
-import cn.adelyn.blog.auth.constant.AuthAccountStatus;
-import cn.adelyn.blog.auth.dao.po.AuthAccountPO;
 import cn.adelyn.blog.auth.pojo.dto.AuthenticationDTO;
 import cn.adelyn.blog.auth.pojo.dto.RegisterAccountDTO;
 import cn.adelyn.blog.auth.pojo.vo.TokenInfoVO;
 import cn.adelyn.blog.auth.service.AuthAccountService;
-import cn.adelyn.blog.auth.service.LoginService;
+import cn.adelyn.blog.auth.service.PasswordLoginService;
+import cn.adelyn.blog.auth.service.TokenService;
 import cn.adelyn.blog.manager.service.SnowflakeService;
 import cn.adelyn.framework.crypto.constant.AlgoConstant;
 import cn.adelyn.framework.crypto.utils.JwtUtil;
@@ -32,9 +31,11 @@ public class AuthTester {
     private SnowflakeService snowflakeRpcService;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private TokenService tokenService;
 
     @Autowired
-    private LoginService loginService;
+    private PasswordLoginService loginService;
 
     private final String USER_NAME = "lichengze";
     private final String PASSWORD = "123456";
@@ -61,7 +62,8 @@ public class AuthTester {
         authenticationDTO.setUserName(USER_NAME);
         authenticationDTO.setPassword(PASSWORD);
 
-        TokenInfoVO tokenInfoVO = loginService.login(authenticationDTO);
+        String authCode = loginService.getAuthCode(authenticationDTO);
+        TokenInfoVO tokenInfoVO = tokenService.getTokenInfoByAuthCode(authCode);
 
         log.info("token: {}", tokenInfoVO);
     }

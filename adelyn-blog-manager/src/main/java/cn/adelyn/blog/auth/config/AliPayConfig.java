@@ -1,39 +1,28 @@
-/*
 package cn.adelyn.blog.auth.config;
 
-import com.alipay.api.AlipayClient;
-import com.alipay.api.DefaultAlipayClient;
+import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+@Getter
 @Configuration
 public class AliPayConfig {
 
     // 支付宝网关
     @Value("${adelyn.blog.auth.aliPay.gateWay:https://openapi.alipay.com/gateway.do}")
-    private String ALIPAY_GATEWAY;
+    private String aliPayGateway;
 
-    */
-/**appID**//*
-
+    /**appID**/
     @Value("${adelyn.blog.auth.aliPay.appId:appId}")
-    private String APP_ID;
-    */
-/**私钥*//*
+    private String appId;
 
+    @Value("${adelyn.blog.auth.aliPay.redirectUrl:https%3a%2f%2fblog.adelyn.cn%2fblog-backend%2fauth%2flogin%2faliPay%2fpublic%2fcallBack}")
+    private String redirectUrl;
+
+    /**私钥*/
     @Value("${adelyn.blog.auth.aliPay.privateKey:privateKey}")
-    private String APP_PRIVATE_KEY;
-    */
-/**支付宝公钥*//*
+    private String appPrivateKey;
 
     @Value("${adelyn.blog.auth.aliPay.publicKey:publicKey}")
-    private String ALIPAY_PUBLIC_KEY;
-
-
-    @Bean
-    public AlipayClient initClient() {
-        return new DefaultAlipayClient(ALIPAY_GATEWAY, APP_ID, APP_PRIVATE_KEY, "json", "UTF-8", ALIPAY_PUBLIC_KEY, "RSA2");
-    }
+    private String aliPayPublicKey;
 }
-*/

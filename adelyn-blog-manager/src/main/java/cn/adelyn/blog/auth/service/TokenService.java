@@ -1,15 +1,18 @@
 package cn.adelyn.blog.auth.service;
 
 import cn.adelyn.blog.auth.pojo.vo.TokenInfoVO;
+import cn.adelyn.framework.cache.util.CaffeineCacheUtil;
 import cn.adelyn.framework.core.execption.AdelynException;
 import cn.adelyn.framework.core.pojo.bo.UserInfoBO;
 import cn.adelyn.framework.core.response.ResponseEnum;
+import cn.adelyn.framework.core.util.RandomIdUtil;
 import cn.adelyn.framework.core.util.StringUtil;
 import cn.adelyn.framework.crypto.utils.JwtUtil;
 import cn.adelyn.framework.crypto.utils.KeyUtil;
 import com.alibaba.fastjson2.JSON;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Assert;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
@@ -19,7 +22,9 @@ import java.security.spec.InvalidKeySpecException;
 import java.util.Base64;
 import java.util.Date;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class TokenService {
@@ -41,7 +46,35 @@ public class TokenService {
     private final String PUBLIC_KEY = "publicKey";
     private final String PRIVATE_KEY = "privateKey";
 
-    public TokenInfoVO generateTokenPair(UserInfoBO userInfoBO) {
+    private final String AUTH_CODE_KEY = "blog:auth:code:";
+
+    public String getAuthCode(UserInfoBO userInfoBO) {
+        String authCode = RandomIdUtil.getRandomLongString();
+
+        CaffeineCacheUtil.put(AUTH_CODE_KEY + authCode, userInfoBO, 30, TimeUnit.SECONDS);
+        return authCode;
+    }
+
+    public TokenInfoVO getTokenInfoByAuthCode(String authCode) {
+        UserInfoBO userInfoBO = (UserInfoBO) CaffeineCacheUtil.get(AUTH_CODE_KEY + authCode);
+
+        if (Objects.isNull(userInfoBO)) {
+            return null;
+        }
+
+        CaffeineCacheUtil.remove(AUTH_CODE_KEY + authCode);
+        return generateTokenPair(userInfoBO);
+    }
+
+    public TokenInfoVO refreshToken(String refreshToken) {
+        UserInfoBO userInfoBO = validToken(refreshToken);
+
+        return generateTokenPair(userInfoBO);
+    }
+
+    private TokenInfoVO generateTokenPair(UserInfoBO userInfoBO) {
+        Assert.notNull(userInfoBO, "userInfo is null, can not generate token");
+
         String accessToken = generateAccessToken(userInfoBO);
         String refreshToken = generateRefreshToken(userInfoBO);
 
@@ -51,17 +84,13 @@ public class TokenService {
                 .build();
     }
 
-    public TokenInfoVO refreshToken(String refreshToken) {
-        UserInfoBO userInfoBO = validToken(refreshToken);
 
-        return generateTokenPair(userInfoBO);
-    }
 
-    public String generateAccessToken(UserInfoBO userInfoBO) {
+    private String generateAccessToken(UserInfoBO userInfoBO) {
         return generateToken(userInfoBO, accessTokenExpirationTime);
     }
 
-    public String generateRefreshToken(UserInfoBO userInfoBO) {
+    private String generateRefreshToken(UserInfoBO userInfoBO) {
         return generateToken(userInfoBO, refreshTokenExpirationTime);
     }
 

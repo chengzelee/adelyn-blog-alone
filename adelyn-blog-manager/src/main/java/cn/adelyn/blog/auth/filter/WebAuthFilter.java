@@ -1,11 +1,14 @@
 package cn.adelyn.blog.auth.filter;
 
+import cn.adelyn.blog.auth.service.AliPayLoginService;
 import cn.adelyn.blog.auth.service.TokenService;
+import cn.adelyn.framework.cache.util.CaffeineCacheUtil;
 import cn.adelyn.framework.core.context.UserInfoContext;
 import cn.adelyn.framework.core.execption.AdelynException;
 import cn.adelyn.framework.core.pojo.bo.UserInfoBO;
 import cn.adelyn.framework.core.response.ResponseEnum;
 import cn.adelyn.framework.core.response.ServerResponse;
+import cn.adelyn.framework.core.util.RandomIdUtil;
 import cn.adelyn.framework.core.util.StringUtil;
 import com.alibaba.fastjson2.JSON;
 import jakarta.servlet.*;
@@ -26,6 +29,7 @@ import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
 import java.util.Objects;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author chengze
@@ -40,6 +44,7 @@ public class WebAuthFilter implements Filter {
 
 	private final AntPathMatcher antPathMatcher;
 	private final TokenService tokenService;
+	private final AliPayLoginService aliPayLoginService;
 
 	/**
 	 * 无需登录权限 unwanted auth 的uri
@@ -65,7 +70,7 @@ public class WebAuthFilter implements Filter {
 		String token = req.getHeader("Authorization");
 
 		if (!StringUtil.hasText(token)) {
-			printServerResponseToWeb(ServerResponse.fail(ResponseEnum.UNLOGIN));
+			printServerResponseToWeb(ServerResponse.fail(ResponseEnum.UNLOGIN, getRedirectUrl()));
 			return;
 		}
 
@@ -78,7 +83,7 @@ public class WebAuthFilter implements Filter {
 		}
 
 		if (Objects.isNull(userInfoBO)) {
-			printServerResponseToWeb(ServerResponse.fail(ResponseEnum.UNLOGIN));
+			printServerResponseToWeb(ServerResponse.fail(ResponseEnum.UNLOGIN, getRedirectUrl()));
 			return;
 		}
 
@@ -89,6 +94,10 @@ public class WebAuthFilter implements Filter {
 		} finally {
 			UserInfoContext.clean();
 		}
+	}
+
+	private String getRedirectUrl() {
+		return aliPayLoginService.getAliPayRedirectUrl();
 	}
 
 	public <T> void printServerResponseToWeb(ServerResponse<T> serverResponse) {

@@ -7,18 +7,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class LoginService {
-
-    @Autowired
-    private TokenService tokenService;
+public class PasswordLoginService extends AbstractLoginService{
 
     @Autowired
     private AuthAccountService authAccountService;
 
-    public TokenInfoVO login(AuthenticationDTO authenticationDTO) {
+    public String getAuthCode(AuthenticationDTO authenticationDTO) {
         UserInfoBO userInfoBO = authAccountService.verifyPassword(authenticationDTO.getUserName(),
                         authenticationDTO.getPassword());
 
-        return tokenService.generateTokenPair(userInfoBO);
+        return getAuthCode(userInfoBO);
     }
 }

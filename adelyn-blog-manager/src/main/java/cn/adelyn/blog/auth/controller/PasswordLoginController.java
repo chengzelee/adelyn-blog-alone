@@ -2,20 +2,22 @@ package cn.adelyn.blog.auth.controller;
 
 import cn.adelyn.blog.auth.pojo.dto.AuthenticationDTO;
 import cn.adelyn.blog.auth.pojo.vo.TokenInfoVO;
-import cn.adelyn.blog.auth.service.LoginService;
+import cn.adelyn.blog.auth.service.PasswordLoginService;
 import cn.adelyn.framework.core.execption.AdelynException;
 import cn.adelyn.framework.core.response.ResponseEnum;
 import cn.adelyn.framework.core.response.ServerResponse;
 import com.alibaba.csp.sentinel.Entry;
 import com.alibaba.csp.sentinel.SphU;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
-import com.alibaba.csp.sentinel.slots.block.flow.FlowException;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.io.IOException;
 
 /**
  * @author chengze
@@ -24,18 +26,19 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @AllArgsConstructor
-@RequestMapping("/auth")
-public class LoginController {
+@RequestMapping("/auth/login/password")
+public class PasswordLoginController {
 
-	private final LoginService loginService;
+	private final PasswordLoginService loginService;
 
-	@PostMapping("/public/login")
-	public ServerResponse<TokenInfoVO> login(@Valid @RequestBody AuthenticationDTO authenticationDTO) {
+/*	@PostMapping("/public")
+	public ServerResponse<String> login(@Valid @RequestBody AuthenticationDTO authenticationDTO) throws IOException {
 		try(Entry entry = SphU.entry("login")) {
-			return ServerResponse.success(loginService.login(authenticationDTO));
+			String authCode = loginService.getAuthCode(authenticationDTO);
+			return ServerResponse.success(loginService.getRedirectUrl(authCode));
 		} catch (BlockException e) {
 			throw new AdelynException(ResponseEnum.TOO_MANY_REQUEST);
 		}
-	}
+	}*/
 
 }

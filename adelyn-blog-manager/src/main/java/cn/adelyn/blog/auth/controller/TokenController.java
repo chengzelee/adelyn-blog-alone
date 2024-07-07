@@ -11,19 +11,21 @@ import com.alibaba.csp.sentinel.SphU;
 import com.alibaba.csp.sentinel.slots.block.BlockException;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/auth")
+@RequestMapping("/auth/token")
 public class TokenController {
 
     private TokenService tokenService;
 
-    @PostMapping("/token/refresh")
+    @GetMapping("/getToken/public")
+    public ServerResponse<TokenInfoVO> getToken(@RequestParam("authCode") String authCode) {
+        return ServerResponse.success(tokenService.getTokenInfoByAuthCode(authCode));
+    }
+
+    @PostMapping("/refresh")
     public ServerResponse<TokenInfoVO> refreshToken(@Valid @RequestBody RefreshTokenDTO refreshTokenDTO) {
         try(Entry entry = SphU.entry("token_refresh")) {
             return ServerResponse.success(tokenService.refreshToken(refreshTokenDTO.getRefreshToken()));

@@ -10,6 +10,7 @@ import lombok.Data;
 public class AuthAccountPO extends BasePO {
     @TableId
     private Long userId;
+    private String aliPayUserId;
     private String userName;
     private String password;
     private Integer status;
