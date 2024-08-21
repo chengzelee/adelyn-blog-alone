@@ -92,7 +92,7 @@ public class BlogSearchService {
         List<Query> shouldQueryList = genBaseQueryList(searchBlogDTO.getQueryStr());
         List<Query> filterQueryList = genPublicQueryList();
 
-        SearchBO<Hit<Object>> searchBO = match(searchBlogDTO.getFrom(), searchBlogDTO.getSize(), shouldQueryList, filterQueryList);
+        SearchBO<Hit<Object>> searchBO = match(searchBlogDTO.getFrom() * searchBlogDTO.getSize(), searchBlogDTO.getSize(), shouldQueryList, filterQueryList);
 
         List<SearchBlogVO> searchBlogVOList = parseHits(searchBO.getList());
 
@@ -108,7 +108,7 @@ public class BlogSearchService {
         List<Query> shouldQueryList = genBaseQueryList(searchBlogDTO.getQueryStr());
         List<Query> filterQueryList = genPrivateQueryList(userId);
 
-        SearchBO<Hit<Object>> searchBO = match(searchBlogDTO.getFrom(), searchBlogDTO.getSize(), shouldQueryList, filterQueryList);
+        SearchBO<Hit<Object>> searchBO = match(searchBlogDTO.getFrom() * searchBlogDTO.getSize(), searchBlogDTO.getSize(), shouldQueryList, filterQueryList);
 
         List<SearchBlogVO> searchBlogVOList = parseHits(searchBO.getList());
 
@@ -132,7 +132,7 @@ public class BlogSearchService {
                                 .minimumShouldMatch("1")
                         )
                 )
-                // 从第几条开始查
+                // 从第几页开始查
                 .from(pageFrom)
                 // 查多少条
                 .size(pageSize)
