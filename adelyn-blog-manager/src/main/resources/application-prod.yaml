@@ -47,7 +47,7 @@ spring:
       enabled: true
   servlet:
     multipart:
-      max-file-size: 1000MB        # 设置单个文件最大大小为1000MB
+      max-file-size: 5000MB        # 设置单个文件最大大小为5000MB
       max-request-size: 10000MB    # 设置多个文件大小为10000MB
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver

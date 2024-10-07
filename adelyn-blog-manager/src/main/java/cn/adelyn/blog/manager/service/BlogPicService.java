@@ -1,10 +1,11 @@
 package cn.adelyn.blog.manager.service;
 
 import cn.adelyn.blog.manager.dao.service.BlogPicInfoDAOService;
-import cn.adelyn.blog.resource.service.ResourceService;
+import cn.adelyn.blog.resource.service.OssResourceServiceImpl;
 import cn.adelyn.framework.cache.util.CaffeineCacheUtil;
 import cn.adelyn.framework.core.util.StringUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.io.InputStream;
@@ -16,7 +17,7 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class BlogPicService {
 
-    private final ResourceService resourceService;
+    private final OssResourceServiceImpl ossResourceService;
     private final SnowflakeService snowflakeService;
     private final BlogPicInfoDAOService blogPicInfoDAOService;
 
@@ -27,7 +28,7 @@ public class BlogPicService {
             picName = picName + ".png";
         }
 
-        Long resourceId = resourceService.addResource(picName, inputStream);
+        Long resourceId = ossResourceService.addResource(picName, inputStream);
 
         blogPicInfoDAOService.insertBlogPicInfo(picId, resourceId);
         return picId;
@@ -37,9 +38,9 @@ public class BlogPicService {
         Long resourceId = getResourceIdByPicId(picId);
 
         return (String) CaffeineCacheUtil.get("downloadUrl:" + picId,
-                // 搞一个短期有效的链接，之的后走cdn
-                (key) -> resourceService.generateDownloadUrl(resourceId, 1729000000L),
-                20, TimeUnit.DAYS);
+                // oss 连接有效期和cdn失效时间相同
+                (key) -> ossResourceService.generateDownloadUrl(resourceId, 2678400000L),
+                31, TimeUnit.DAYS);
     }
 
     public void deletePic(List<Long> picIdList) {
@@ -49,7 +50,7 @@ public class BlogPicService {
             CaffeineCacheUtil.remove(picId);
         });
 
-        resourceService.deleteResource(resourceIdList);
+        ossResourceService.deleteResource(resourceIdList);
         blogPicInfoDAOService.deleteBlogPicInfo(picIdList);
     }
 

@@ -10,16 +10,24 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
-@AllArgsConstructor
 public class ResourceInfoDAOServiceImpl extends ServiceImpl<ResourceInfoMapper, ResourceInfoPO> implements ResourceInfoDAOService {
 
-    public ResourceInfoPO getResourceInfoByResourceId(Long resourceId) {
+    public List<ResourceInfoPO> getResourceBaseInfoListByIdList(List<Long> resourceIdList) {
         LambdaQueryWrapper<ResourceInfoPO> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(ResourceInfoPO::getResourceId, resourceId);
-        return getOne(queryWrapper);
+        queryWrapper.in(ResourceInfoPO::getResourceId, resourceIdList);
+
+        return Optional
+                .ofNullable(list(queryWrapper))
+                .orElse(new ArrayList<>());
+    }
+
+    public ResourceInfoPO getResourceInfoByResourceId(Long resourceId) {
+        return getById(resourceId);
     }
 
     public void addResourceInfo(AddResourceInfoBO addResourceInfoBO) {

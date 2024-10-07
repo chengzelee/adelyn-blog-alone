@@ -8,6 +8,8 @@ import java.util.List;
 
 public interface ResourceInfoDAOService extends IService<ResourceInfoPO> {
 
+    List<ResourceInfoPO> getResourceBaseInfoListByIdList(List<Long> resourceIdList);
+
     ResourceInfoPO getResourceInfoByResourceId(Long resourceId);
 
     void addResourceInfo(AddResourceInfoBO addResourceInfoBO);
