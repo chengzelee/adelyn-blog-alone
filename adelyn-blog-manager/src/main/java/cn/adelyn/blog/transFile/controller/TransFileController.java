@@ -5,6 +5,9 @@ import cn.adelyn.blog.transFile.service.TransFileService;
 import cn.adelyn.framework.core.execption.AdelynException;
 import cn.adelyn.framework.core.response.ResponseEnum;
 import cn.adelyn.framework.core.response.ServerResponse;
+import com.alibaba.csp.sentinel.Entry;
+import com.alibaba.csp.sentinel.SphU;
+import com.alibaba.csp.sentinel.slots.block.BlockException;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -35,9 +38,11 @@ public class TransFileController {
 
     @GetMapping("/public/list")
     public ServerResponse<List<TransFileInfoVO>> transFile(@RequestParam("transCode") Long transCode) {
-        transFileService.transFileFlowControl();
-
-        return ServerResponse.success(transFileService.getTransFileList(transCode));
+        try(Entry entry = SphU.entry("trans_file_get_file_list")) {
+            return ServerResponse.success(transFileService.getTransFileList(transCode));
+        } catch (BlockException e) {
+            throw new AdelynException(ResponseEnum.TOO_MANY_REQUEST);
+        }
     }
 
     @PostMapping("/public/upload")

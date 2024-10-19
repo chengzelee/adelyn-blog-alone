@@ -34,14 +34,19 @@ public class SentinelRuleConfig implements ApplicationRunner {
         picGet.setCount(50);
         picGet.setGrade(RuleConstant.FLOW_GRADE_QPS);
 
-        FlowRule transCodeGenerate = new FlowRule("trans_file_flow_control");
-        transCodeGenerate.setCount(5);
-        transCodeGenerate.setGrade(RuleConstant.FLOW_GRADE_QPS);
+        FlowRule transFileModule = new FlowRule("trans_file_flow_control");
+        transFileModule.setCount(5);
+        transFileModule.setGrade(RuleConstant.FLOW_GRADE_QPS);
+
+        FlowRule transFileGetFileList = new FlowRule("trans_file_get_file_list");
+        transFileGetFileList.setCount(1);
+        transFileGetFileList.setGrade(RuleConstant.FLOW_GRADE_QPS);
 
         flowRuleList.add(login);
         flowRuleList.add(tokenRefresh);
         flowRuleList.add(picGet);
-        flowRuleList.add(transCodeGenerate);
+        flowRuleList.add(transFileModule);
+        flowRuleList.add(transFileGetFileList);
 
         // 将规则添加到FlowRuleManager
         FlowRuleManager.loadRules(flowRuleList);
